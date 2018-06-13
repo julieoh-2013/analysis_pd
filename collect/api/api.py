@@ -23,9 +23,11 @@ def  pd_fetch_tourspot_visitor(district1='', district2='', tourspot='', year=0, 
 
     isnext = True
     pgno=1
+
+    ym = str(year) +'0'+str(month) if month<10 else str(year)+str(month)
     while isnext is True:
         url = pd_gen_url(BASE_URL_FB_API,
-                         YM='{0:04d}{1:02d}'.format(year, month),
+                         YM=ym,
                          SIDO=district1,
                          GUNGU=district2,
                          RES_NM=tourspot,

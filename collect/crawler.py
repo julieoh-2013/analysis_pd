@@ -72,25 +72,22 @@ def preprocess_item(item):
 
 
 
-def crawlling_tourspot_visitor(district, start_year, end_year, fetch=True):
+def crawlling_tourspot_visitor(district, start_year, end_year):
     results = []
     # 서울특별시_tourinstspot_2017_2017.json
     filename = '%s/%s_%s_%s_%s.json' % (RESULT_DIRECTORY, district,'tourinstspot', start_year, end_year)
 
-    if fetch:
-        for year in range(int(start_year), int(end_year)+1):
-            for month in range(1,13):
-                for items in api.pd_fetch_tourspot_visitor(district1=district,year=year,month=month):
-                    for item in items:
-                        preprocess_item(item)
-
-        # save results to file
-        with open(filename, 'w', encoding='utf-8') as outfile:
-            json_string = json.dumps(results, indent=4, sort_keys=True, ensure_ascii=False)
-            outfile.write(json_string)
-
-    return filename
-
+    for year in range(int(start_year), int(end_year)+1):
+        for month in range(1,13):
+            for items in api.pd_fetch_tourspot_visitor(district1=district,year=year,month=month):
+                for item in items:
+                    preprocess_item(item)
+                results += items
+    # save results to file
+    with open(filename, 'w', encoding='utf-8') as outfile:
+        json_string = json.dumps(results, indent=4, sort_keys=True, ensure_ascii=False)
+        outfile.write(json_string)
+        print('outfile : ', outfile)
 
 if not os.path.exists(RESULT_DIRECTORY):
     os.makedirs(RESULT_DIRECTORY)

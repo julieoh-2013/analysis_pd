@@ -31,13 +31,12 @@ def  pd_fetch_tourspot_visitor(district1='', district2='', tourspot='', year=0, 
                          RES_NM=tourspot,
                          _type='json',
                          pageno=pgno,
-                         numOfRows=5)
+                         numOfRows=100)
 
         json_result = json_request(url=url)
 
         items = None if json_result is None else json_result['response']['body']['items'].get('item')
         nrow = None if json_result is None else json_result['response']['body'].get('numOfRows')
-        curpgno = None if json_result is None else json_result['response']['body'].get('pageNo')
         totcnt = None if json_result is None else json_result['response']['body'].get('totalCount')
 
         if pgno < get_tot_pgno(totcnt, nrow):

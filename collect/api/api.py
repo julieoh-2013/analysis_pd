@@ -10,7 +10,6 @@ url = pdapi.pd_gen_url(
     numOfRows=10,
     _type='json',
     pageNo=1)
-
 '''
 BASE_URL_FB_API='http://openapi.tour.go.kr/openapi/service/TourismResourceStatsService/getPchrgTrrsrtVisitorList'
 ACCESS_TOKEN='O4GTUjJhqd2Zh%2FUKol%2FD%2F03SF57S%2B1Kr%2FEF55PYYb3zh0ZeimbMRClwaUBScosK6KGB7rJHgnlr4QCF%2FIpTV1Q%3D%3D'

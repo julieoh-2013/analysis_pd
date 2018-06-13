@@ -12,7 +12,7 @@ url = api.pd_gen_url(
     _type='json',
     pageNo=1)
 
-print(url)
+#print(url)
 
 
 # test for pd_fetch_tourspot_visitor

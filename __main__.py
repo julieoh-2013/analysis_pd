@@ -12,5 +12,5 @@ items = [
 
 # collection
 for item in items:
-    resultfile = collect.crawlling_tourspot_visitor(**item)
-    item['resultfile'] = resultfile
+    collect.crawlling_tourspot_visitor(**item)
+

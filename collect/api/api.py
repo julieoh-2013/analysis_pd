@@ -1,4 +1,5 @@
 from _datetime import datetime
+import math
 from urllib.parse import urlencode
 from .web_request import json_request
 
@@ -76,6 +77,17 @@ def  pd_fetch_tourspot_visitor(district1='', district2='', tourspot='', year=0, 
         nrow = body.get('numOfRows')
         totcnt = body.get('totalCount')
 
+        if totcnt == 0:
+            break
+
+        last_page = math.ceil(totcnt/nrow) # math.ceil(tn/n) 나눈몫정수중 높은 정수 줌 2.4 는 3줌 작은수주는건 floor
+        if pgno == last_page:
+            isnext = False
+        else:
+            pgno = pgno + 1
+
+    yield item
+'''
         if pgno < get_tot_pgno(totcnt, nrow):
             pgno = pgno + 1
         else :
@@ -88,4 +100,4 @@ def get_tot_pgno(tot, rnum):
         return tot // rnum
     else:
         return tot // rnum + 1
-
+'''

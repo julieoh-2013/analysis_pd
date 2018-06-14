@@ -15,7 +15,7 @@ url = pdapi.pd_gen_url(
     _type='json',
     pageNo=1)
 '''
-BASE_URL_FB_API='http://openapi.tour.go.kr/openapi/service/TourismResourceStatsService/getPchrgTrrsrtVisitorList'
+BASE_URL_API='http://openapi.tour.go.kr/openapi/service/TourismResourceStatsService/getPchrgTrrsrtVisitorList'
 SERVICE_KEY='O4GTUjJhqd2Zh%2FUKol%2FD%2F03SF57S%2B1Kr%2FEF55PYYb3zh0ZeimbMRClwaUBScosK6KGB7rJHgnlr4QCF%2FIpTV1Q%3D%3D'
 
 
@@ -54,7 +54,7 @@ def  pd_fetch_tourspot_visitor(district1='', district2='', tourspot='', year=0, 
 
     ym = str(year) +'0'+str(month) if month<10 else str(year)+str(month)
     while isnext is True:
-        url = pd_gen_url(BASE_URL_FB_API,
+        url = pd_gen_url(BASE_URL_API,
                          YM=ym,
                          SIDO=district1,
                          GUNGU=district2,

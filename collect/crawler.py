@@ -69,8 +69,67 @@ def preprocess_item(item):
     else:
         item['restrict2'] = item['gungu']
         del item['gungu']
+'''
+    {
+        "country_code": 275,
+        "country_name": "미국",
+        "date": 201701,
+        "visit_count": 55739
+    },
+    {
+      --  'ed':'방한외래관광객',
+      --  'edCd':'E',
+        'natCd':275,
+        'natKorNm':'미 국',
+        'num':57212,
+      --  'rnum':1,
+        'ym':201701
+    }
+'''
+def preprocess_foreign_visitor(data):
+    #ed
+    del data['ed']
+
+    #edCd
+    del data['edCd']
+
+    #rnum
+    del data['rnum']
+
+    #나라코드
+    data['country_code'] = data['natCd']
+    del data['natCd']
+
+    #나라이름
+    data['country_name'] = data['natKorNm'].replace(' ','')
+    del data['natKorNm']
+
+    #방문자수
+    data['visit_count'] = data['num']
+    del data['num']
+
+    #년월
+    if 'ym' not in data:
+        data['date'] =''
+    else:
+        data['date'] = data['ym']
+        del data['ym']
 
 
+def crawling_foreign_visitor(country, start_year, end_year):
+    results = []
+
+    for year in range(start_year, end_year+1):
+        #for month in range(1,13):
+        for month in range(1, 5):
+            data = api.pd_fetch_foreign_visitor(country[1],year,month)
+            if data is None:
+                continue    #중국 코드 잘못넣어서 결과 없어도 다음 나라거 가져오게
+
+            preprocess_foreign_visitor(data)
+            results.append(data)
+    #save data to file
+    print(results)
 
 def crawlling_tourspot_visitor(district, start_year, end_year):
     results = []

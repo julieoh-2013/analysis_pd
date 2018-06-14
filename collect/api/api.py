@@ -1,5 +1,8 @@
+from _datetime import datetime
 from urllib.parse import urlencode
 from .web_request import json_request
+
+
 '''
 url = pdapi.pd_gen_url(
     'http://openapi.tour.go.kr/openapi/service/TourismResourceStatsService/getPchrgTrrsrtVisitorList',
@@ -12,10 +15,35 @@ url = pdapi.pd_gen_url(
     pageNo=1)
 '''
 BASE_URL_FB_API='http://openapi.tour.go.kr/openapi/service/TourismResourceStatsService/getPchrgTrrsrtVisitorList'
-ACCESS_TOKEN='O4GTUjJhqd2Zh%2FUKol%2FD%2F03SF57S%2B1Kr%2FEF55PYYb3zh0ZeimbMRClwaUBScosK6KGB7rJHgnlr4QCF%2FIpTV1Q%3D%3D'
-def pd_gen_url(base,**params):
-    url = '%s?%s&serviceKey=%s' % (base,urlencode(params),ACCESS_TOKEN)
+SERVICE_KEY='O4GTUjJhqd2Zh%2FUKol%2FD%2F03SF57S%2B1Kr%2FEF55PYYb3zh0ZeimbMRClwaUBScosK6KGB7rJHgnlr4QCF%2FIpTV1Q%3D%3D'
+
+
+def pd_gen_url(endpoint,**param):
+    url = '%s?%s&serviceKey=%s' % (endpoint,urlencode(param),SERVICE_KEY)
     return url
+
+
+def pd_fetch_foreign_visitor(country_code, year, month):
+    endpoint = 'http://openapi.tour.go.kr/openapi/service/EdrcntTourismStatsService/getEdrcntTourismStatsList'
+    url = pd_gen_url(endpoint,
+                     YM='{0:04d}{1:02d}'.format(year,month), #201701
+                     NAT_CD=country_code,
+                     ED_CD='E',  # D: 국민 해외 관광객,  E: 방한 해외 관광객
+                     _type='json'
+                     )
+    json_result = json_request(url)
+
+    json_response = json_result.get('response')
+    json_header = json_response.get('header')
+    result_message = json_header.get('resultMsg')
+    if 'OK'!=result_message:
+        print('%s Error[%s] for request %s', (datetime.now(),result_message,url))
+        return None
+    json_body = json_response.get('body')
+    json_items = json_body.get('items')
+
+    return json_items.get('item')if isinstance(json_items, dict) else None  # items가 dict 형 이면
+
 
 #for items in api.pd_fetch_tourspot_visitor(district1='서울특별시', year=2012, month=7):
 def  pd_fetch_tourspot_visitor(district1='', district2='', tourspot='', year=0, month=0):
@@ -39,11 +67,11 @@ def  pd_fetch_tourspot_visitor(district1='', district2='', tourspot='', year=0, 
         body = None if resp is None else resp['body']
         items =None if body is None else body['items']
 
-        if items =="":
-            isnext = False
-            item=""
-        else:
+        if isinstance(items, dict):
             item = items.get('item')
+        else :
+            isnext = False
+            item = None
 
         nrow = body.get('numOfRows')
         totcnt = body.get('totalCount')
@@ -61,9 +89,3 @@ def get_tot_pgno(tot, rnum):
     else:
         return tot // rnum + 1
 
-'''
-        items = None if json_result is None else json_result['response']['body']['items'].get('item')
-        print('items : ', items)
-        nrow = None if json_result is None else json_result['response']['body'].get('numOfRows')
-        totcnt = None if json_result is None else json_result['response']['body'].get('totalCount')
-'''

@@ -120,16 +120,22 @@ def crawling_foreign_visitor(country, start_year, end_year):
     results = []
 
     for year in range(start_year, end_year+1):
-        #for month in range(1,13):
-        for month in range(1, 5):
+        for month in range(1,13):
             data = api.pd_fetch_foreign_visitor(country[1],year,month)
             if data is None:
                 continue    #중국 코드 잘못넣어서 결과 없어도 다음 나라거 가져오게
 
             preprocess_foreign_visitor(data)
             results.append(data)
-    #save data to file
-    print(results)
+
+
+    #save data to file  : 나라_코드_foreign_visitor_2017_2017
+    filename = '%s/%s(%s)_foreignvisitor_%s_%s.json'%(RESULT_DIRECTORY,country[0],country[1],start_year,end_year)
+
+    with open(filename,'w',encoding='utf-8') as outfile: # 파일 헨들러 이름 outfile
+        json_strig = json.dumps(results, indent=4, sort_keys=True, ensure_ascii=False) #객체를 str로 변환해줌
+        outfile.write(json_strig)
+
 
 def crawlling_tourspot_visitor(district, start_year, end_year):
     results = []

@@ -88,9 +88,6 @@ def crawlling_tourspot_visitor(district, start_year, end_year):
         json_string = json.dumps(results, indent=4, sort_keys=True, ensure_ascii=False)
         outfile.write(json_string)
         print('outfile : ', outfile)
-        print('outfile : ', outfile)
-        print('outfile : ', outfile)
-
 
 if not os.path.exists(RESULT_DIRECTORY):
     os.makedirs(RESULT_DIRECTORY)

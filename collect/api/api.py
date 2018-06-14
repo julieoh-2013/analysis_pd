@@ -35,9 +35,8 @@ def  pd_fetch_tourspot_visitor(district1='', district2='', tourspot='', year=0, 
                          numOfRows=100)
 
         json_result = json_request(url=url)
-
-        body = None if json_result is None else json_result['response']['body']
-
+        resp = None if json_result is None else json_result['response']
+        body = None if resp is None else resp['body']
         items =None if body is None else body['items']
 
         if items =="":
@@ -46,8 +45,8 @@ def  pd_fetch_tourspot_visitor(district1='', district2='', tourspot='', year=0, 
         else:
             item = items.get('item')
 
-        nrow = None if body is None else body.get('numOfRows')
-        totcnt = None if body is None else body.get('totalCount')
+        nrow = body.get('numOfRows')
+        totcnt = body.get('totalCount')
 
         if pgno < get_tot_pgno(totcnt, nrow):
             pgno = pgno + 1

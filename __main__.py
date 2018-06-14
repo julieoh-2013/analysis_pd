@@ -6,8 +6,8 @@ if __name__ == '__main__':
 """
 
 items = [
-    {'district': '서울특별시', 'start_year': '2017', 'end_year': '2017'},
-    {'district': '부산광역시', 'start_year': '2016', 'end_year': '2016'},
+  #  {'district': '서울특별시', 'start_year': '2017', 'end_year': '2017'},
+   # {'district': '부산광역시', 'start_year': '2016', 'end_year': '2016'},
     {'district': '인천광역시', 'start_year': '2018', 'end_year': '2018'}
 ]
 

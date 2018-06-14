@@ -83,6 +83,7 @@ def crawlling_tourspot_visitor(district, start_year, end_year):
                 for item in items:
                     preprocess_item(item)
                 results += items
+
     # save results to file
     with open(filename, 'w', encoding='utf-8') as outfile:
         json_string = json.dumps(results, indent=4, sort_keys=True, ensure_ascii=False)

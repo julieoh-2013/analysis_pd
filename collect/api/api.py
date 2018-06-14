@@ -36,19 +36,35 @@ def  pd_fetch_tourspot_visitor(district1='', district2='', tourspot='', year=0, 
 
         json_result = json_request(url=url)
 
-        items = None if json_result is None else json_result['response']['body']['items'].get('item')
-        nrow = None if json_result is None else json_result['response']['body'].get('numOfRows')
-        totcnt = None if json_result is None else json_result['response']['body'].get('totalCount')
+        body = None if json_result is None else json_result['response']['body']
+
+        items =None if body is None else body['items']
+
+        if items =="":
+            isnext = False
+            item=""
+        else:
+            item = items.get('item')
+
+        nrow = None if body is None else body.get('numOfRows')
+        totcnt = None if body is None else body.get('totalCount')
 
         if pgno < get_tot_pgno(totcnt, nrow):
             pgno = pgno + 1
         else :
             isnext = False
 
-    yield items
+    yield item
 
 def get_tot_pgno(tot, rnum):
     if tot % rnum == 0:
         return tot // rnum
     else:
         return tot // rnum + 1
+
+'''
+        items = None if json_result is None else json_result['response']['body']['items'].get('item')
+        print('items : ', items)
+        nrow = None if json_result is None else json_result['response']['body'].get('numOfRows')
+        totcnt = None if json_result is None else json_result['response']['body'].get('totalCount')
+'''

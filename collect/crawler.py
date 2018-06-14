@@ -77,8 +77,11 @@ def crawlling_tourspot_visitor(district, start_year, end_year):
     # 서울특별시_tourinstspot_2017_2017.json
     filename = '%s/%s_%s_%s_%s.json' % (RESULT_DIRECTORY, district,'tourinstspot', start_year, end_year)
 
+    curyear=datetime.today().year
+    untilmonth = datetime.today().month+1 if(str(curyear) == start_year) else 13
+
     for year in range(int(start_year), int(end_year)+1):
-        for month in range(1,13):
+        for month in range(1,untilmonth):
             for items in api.pd_fetch_tourspot_visitor(district1=district,year=year,month=month):
                 for item in items:
                     preprocess_item(item)
@@ -88,7 +91,6 @@ def crawlling_tourspot_visitor(district, start_year, end_year):
     with open(filename, 'w', encoding='utf-8') as outfile:
         json_string = json.dumps(results, indent=4, sort_keys=True, ensure_ascii=False)
         outfile.write(json_string)
-        print('outfile : ', outfile)
 
 if not os.path.exists(RESULT_DIRECTORY):
     os.makedirs(RESULT_DIRECTORY)

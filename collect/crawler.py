@@ -126,10 +126,10 @@ def crawling_foreign_visitor(country, start_year, end_year):
                 continue    #중국 코드 잘못넣어서 결과 없어도 다음 나라거 가져오게
 
             preprocess_foreign_visitor(data)
-            results.append(data)
+            results.append(data)  # append 리스트 끝에  data 객체추가
+            #results += data # += 리스트  끝에 data 값 추가
 
-
-    #save data to file  : 나라_코드_foreign_visitor_2017_2017
+    #save data to file  : 나라_코드_foreign_visitor_2017_2017.json
     filename = '%s/%s(%s)_foreignvisitor_%s_%s.json'%(RESULT_DIRECTORY,country[0],country[1],start_year,end_year)
 
     with open(filename,'w',encoding='utf-8') as outfile: # 파일 헨들러 이름 outfile

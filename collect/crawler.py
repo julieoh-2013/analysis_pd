@@ -120,13 +120,18 @@ def crawling_foreign_visitor(country,
                              start_year,
                              end_year,
                              fetch=True,
-                             result_directory=''):
+                             result_directory='',
+                             service_key=''):
     results = []
 
     if fetch:
         for year in range(start_year, end_year+1):
             for month in range(1,13):
-                data = api.pd_fetch_foreign_visitor(country[1],year,month)
+                data = api.pd_fetch_foreign_visitor(
+                    country[1],
+                    year,
+                    month,
+                    service_key)
                 if data is None:
                     continue    #중국 코드 잘못넣어서 결과 없어도 다음 나라거 가져오게
 
@@ -142,11 +147,13 @@ def crawling_foreign_visitor(country,
             outfile.write(json_strig)
 
 
-def crawlling_tourspot_visitor(district,
+def crawlling_tourspot_visitor(
+                               district,
                                start_year,
                                end_year,
                                fetch=True,
-                               result_directory=''
+                               result_directory='',
+                               service_key=''
                                ):
     results = []
     # 서울특별시_tourinstspot_2017_2017.json
@@ -158,7 +165,12 @@ def crawlling_tourspot_visitor(district,
     if fetch:
         for year in range(int(start_year), int(end_year)+1):
             for month in range(1,untilmonth):
-                for items in api.pd_fetch_tourspot_visitor(district1=district,year=year,month=month):
+                for items in api.pd_fetch_tourspot_visitor(
+                        district1=district,
+                        year=year,
+                        month=month,
+                        service_key=service_key # keyword parmeter
+                ):
                     for item in items:
                         preprocess_item(item)
                     results += items

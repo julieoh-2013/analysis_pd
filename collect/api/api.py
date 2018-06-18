@@ -19,14 +19,15 @@ BASE_URL_API='http://openapi.tour.go.kr/openapi/service/TourismResourceStatsServ
 SERVICE_KEY='O4GTUjJhqd2Zh%2FUKol%2FD%2F03SF57S%2B1Kr%2FEF55PYYb3zh0ZeimbMRClwaUBScosK6KGB7rJHgnlr4QCF%2FIpTV1Q%3D%3D'
 
 
-def pd_gen_url(endpoint,**param):
-    url = '%s?%s&serviceKey=%s' % (endpoint,urlencode(param),SERVICE_KEY)
+def pd_gen_url(endpoint,service_key,**param):#service_key는 param엔코딩되서
+    url = '%s?%s&serviceKey=%s' % (endpoint,urlencode(param),service_key)
     return url
 
 
-def pd_fetch_foreign_visitor(country_code, year, month):
+def pd_fetch_foreign_visitor(country_code, year, month, service_key=''):
     endpoint = 'http://openapi.tour.go.kr/openapi/service/EdrcntTourismStatsService/getEdrcntTourismStatsList'
     url = pd_gen_url(endpoint,
+                     service_key,
                      YM='{0:04d}{1:02d}'.format(year,month), #201701
                      NAT_CD=country_code,
                      ED_CD='E',  # D: 국민 해외 관광객,  E: 방한 해외 관광객
@@ -47,7 +48,13 @@ def pd_fetch_foreign_visitor(country_code, year, month):
 
 
 #for items in api.pd_fetch_tourspot_visitor(district1='서울특별시', year=2012, month=7):
-def  pd_fetch_tourspot_visitor(district1='', district2='', tourspot='', year=0, month=0):
+def  pd_fetch_tourspot_visitor(
+        district1='',
+        district2='',
+        tourspot='',
+        year=0,
+        month=0,
+        service_key=''):
 
     isnext = True
     pgno=1
@@ -55,6 +62,7 @@ def  pd_fetch_tourspot_visitor(district1='', district2='', tourspot='', year=0, 
     ym = str(year) +'0'+str(month) if month<10 else str(year)+str(month)
     while isnext is True:
         url = pd_gen_url(BASE_URL_API,
+                         service_key,
                          YM=ym,
                          SIDO=district1,
                          GUNGU=district2,

@@ -1,19 +1,24 @@
 import collect
-
+from config import CONFIG
  # collect.crawlling_tourspot_visitor(district='서울특별시', start_year=2017, end_year=2017)
 if __name__ == '__main__':
 
    #collect
 
-   for country in [('중국', 112), ('일본', 130), ('미국', 275)]:
-       collect.crawling_foreign_visitor(country, 2017, 2017) # 튜플은 다른타입데이터 들어감 리스트는 같은타입 데이터가 들어감
+    collect.crawlling_tourspot_visitor(
+                                        district=CONFIG['district'],
+                                         **CONFIG['common'] )
 
-   '''
-   collect.crawlling_tourspot_visitor(
-                                        district='서울특별시', 
-                                        start_year=2017, 
-                                        end_year=2017)
-    '''
+
+    for country in CONFIG['contries']:
+       collect.crawling_foreign_visitor( country,
+                                        **CONFIG['common'] )
+                                       # start_year=CONFIG['common']['start_year'],
+                                       # end_year= CONFIG['common']['end_year'])
+                                       # 튜플은 다른타입데이터 들어감 리스트는 같은타입 데이터가 들어감
+
+
+
 
 
 

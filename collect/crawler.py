@@ -1,11 +1,11 @@
 from datetime import datetime, timedelta
 
-import os
+#import os
 
 from .api import api
 import json
 
-RESULT_DIRECTORY = '__results__/crawling'
+#RESULT_DIRECTORY = '__results__/crawling'
 '''
  count_locals :23455      'csNatCnt':48983  내국인방문객수
  count_forigner:245325    'csForCnt':50216, 외국인방문객수 
@@ -116,46 +116,57 @@ def preprocess_foreign_visitor(data):
         del data['ym']
 
 
-def crawling_foreign_visitor(country, start_year, end_year):
+def crawling_foreign_visitor(country,
+                             start_year,
+                             end_year,
+                             fetch=True,
+                             result_directory=''):
     results = []
 
-    for year in range(start_year, end_year+1):
-        for month in range(1,13):
-            data = api.pd_fetch_foreign_visitor(country[1],year,month)
-            if data is None:
-                continue    #중국 코드 잘못넣어서 결과 없어도 다음 나라거 가져오게
+    if fetch:
+        for year in range(start_year, end_year+1):
+            for month in range(1,13):
+                data = api.pd_fetch_foreign_visitor(country[1],year,month)
+                if data is None:
+                    continue    #중국 코드 잘못넣어서 결과 없어도 다음 나라거 가져오게
 
-            preprocess_foreign_visitor(data)
-            results.append(data)  # append 리스트 끝에  data 객체추가
-            #results += data # += 리스트  끝에 data 값 추가
+                preprocess_foreign_visitor(data)
+                results.append(data)  # append 리스트 끝에  data 객체추가
+                #results += data # += 리스트  끝에 data 값 추가
 
-    #save data to file  : 나라_코드_foreign_visitor_2017_2017.json
-    filename = '%s/%s(%s)_foreignvisitor_%s_%s.json'%(RESULT_DIRECTORY,country[0],country[1],start_year,end_year)
+        #save data to file  : 나라_코드_foreign_visitor_2017_2017.json
+        filename = '%s/%s(%s)_foreignvisitor_%s_%s.json'%(result_directory,country[0],country[1],start_year,end_year)
 
-    with open(filename,'w',encoding='utf-8') as outfile: # 파일 헨들러 이름 outfile
-        json_strig = json.dumps(results, indent=4, sort_keys=True, ensure_ascii=False) #객체를 str로 변환해줌
-        outfile.write(json_strig)
+        with open(filename,'w',encoding='utf-8') as outfile: # 파일 헨들러 이름 outfile
+            json_strig = json.dumps(results, indent=4, sort_keys=True, ensure_ascii=False) #객체를 str로 변환해줌
+            outfile.write(json_strig)
 
 
-def crawlling_tourspot_visitor(district, start_year, end_year):
+def crawlling_tourspot_visitor(district,
+                               start_year,
+                               end_year,
+                               fetch=True,
+                               result_directory=''
+                               ):
     results = []
     # 서울특별시_tourinstspot_2017_2017.json
-    filename = '%s/%s_%s_%s_%s.json' % (RESULT_DIRECTORY, district,'tourinstspot', start_year, end_year)
+    filename = '%s/%s_%s_%s_%s.json' % (result_directory, district,'tourinstspot', start_year, end_year)
 
     curyear=datetime.today().year
     untilmonth = datetime.today().month+1 if(str(curyear) == start_year) else 13
 
-    for year in range(int(start_year), int(end_year)+1):
-        for month in range(1,untilmonth):
-            for items in api.pd_fetch_tourspot_visitor(district1=district,year=year,month=month):
-                for item in items:
-                    preprocess_item(item)
-                results += items
+    if fetch:
+        for year in range(int(start_year), int(end_year)+1):
+            for month in range(1,untilmonth):
+                for items in api.pd_fetch_tourspot_visitor(district1=district,year=year,month=month):
+                    for item in items:
+                        preprocess_item(item)
+                    results += items
 
-    # save results to file
-    with open(filename, 'w', encoding='utf-8') as outfile:
-        json_string = json.dumps(results, indent=4, sort_keys=True, ensure_ascii=False)
-        outfile.write(json_string)
+        # save results to file
+        with open(filename, 'w', encoding='utf-8') as outfile:
+            json_string = json.dumps(results, indent=4, sort_keys=True, ensure_ascii=False)
+            outfile.write(json_string)
 
-if not os.path.exists(RESULT_DIRECTORY):
-    os.makedirs(RESULT_DIRECTORY)
+#if not os.path.exists(RESULT_DIRECTORY):
+ #   os.makedirs(RESULT_DIRECTORY)

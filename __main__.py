@@ -1,44 +1,45 @@
 import collect
+import analyze
+import visualize
 from config import CONFIG
- # collect.crawlling_tourspot_visitor(district='서울특별시', start_year=2017, end_year=2017)
+import matplotlib.pyplot as plt
+import pandas as pd
+
 if __name__ == '__main__':
+    resultfiles = dict()
 
-   #collect
+    #collect
+    resultfiles['tourspot_visitor'] = collect.crawling_tourspot_visitor(
+                                                    district=CONFIG['district'],
+                                                    **CONFIG['common'])
 
-    collect.crawlling_tourspot_visitor(
-                                        district=CONFIG['district'],
-                                         **CONFIG['common'] )
-
-
+    resultfiles['foreign_visitor'] = []
     for country in CONFIG['contries']:
-       collect.crawling_foreign_visitor( country,
-                                        **CONFIG['common'] )
-                                       # start_year=CONFIG['common']['start_year'],
-                                       # end_year= CONFIG['common']['end_year'])
-                                       # 튜플은 다른타입데이터 들어감 리스트는 같은타입 데이터가 들어감
+        rf = collect.crawling_foreign_visitor(country, **CONFIG['common'])
+        resultfiles['foreign_visitor'].append(rf)
+
+    #1. analysis and visualize
+    #result_analsis = analyze.analysis_correlation(resultfiles)
+    #visualize.graph_scatter(result_analsis)
+    #print(result_analsis)
+
+    #2. analysis and visualize (for문-dataframe만들고)
+    result_analysis = analyze.analysis_correlation_by_tourspot(resultfiles)
+    graph_table = pd.DataFrame(result_analysis, columns=['tourspot', 'r_중국', 'r_일본', 'r_미국'])
+    graph_table = graph_table.set_index('tourspot')
+
+    graph_table.plot(kind='bar', rot=60)
+    plt.show()
 
 
-
-
-
-
-
-   #analysis
-
-
-   #visualize
-
-
-"""
-
-items = [
-  #  {'district': '서울특별시', 'start_year': '2017', 'end_year': '2017'},
-   # {'district': '부산광역시', 'start_year': '2016', 'end_year': '2016'},
-    {'district': '인천광역시', 'start_year': '2018', 'end_year': '2018'}
-]
-
-# collection
-for item in items:
-    collect.crawlling_tourspot_visitor(**item)
-
-"""
+    #장소별로 방문자수와 일본인 입국자수와 상관계수 구하기 장소별 상관계수3개나옴
+    #dataframe = 안에서 머지
+    # tourspot r_중국  r_일본  r_미국 중국입국자수 일본입국자수 미국입국자수 중국방문자수....
+    #  경복궁     0.2  0.33    0.88
+    #  경복궁     0.2  0.33    0.88  (딕셔너리 리스트에 넣어서)
+    '''
+    graph_table = pd.DataFrame(result_analysis, colums=['tourspot','r_중국','r_일본','r_미국',])
+    graph_table= graph_table.set_index('tourspot')
+    graph_table.plot(kind='bar')
+    plt.show()
+    '''

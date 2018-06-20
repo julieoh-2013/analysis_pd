@@ -25,10 +25,10 @@ if __name__ == '__main__':
 
     #2. analysis and visualize (for문-dataframe만들고)
     result_analysis = analyze.analysis_correlation_by_tourspot(resultfiles)
-    graph_table = pd.DataFrame(result_analysis, columns=['tourspot', 'r_중국', 'r_일본', 'r_미국'])
+    graph_table = pd.DataFrame(result_analysis)
     graph_table = graph_table.set_index('tourspot')
 
-    graph_table.plot(kind='bar', rot=60)
+    graph_table.plot(kind='bar', rot=70)
     plt.show()
 
 

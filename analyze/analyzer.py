@@ -53,7 +53,8 @@ def analysis_correlation_by_tourspot(resultfiles):
     results = []
     for spot in tourist_spots :
         data = {'tourspot': spot}
-        temp_table = tourspotvisitor_table[tourspotvisitor_table['tourist_spot'] == spot]
+        s = tourspotvisitor_table['tourist_spot'] == spot
+        temp_table = tourspotvisitor_table[s]
         temp_table = temp_table.set_index('date')
 
         for filename in resultfiles['foreign_visitor']:
@@ -68,12 +69,12 @@ def analysis_correlation_by_tourspot(resultfiles):
                                    left_index=True,
                                    right_index=True
                                    )
-
+            print(merge_table)
             country_name = foreignvisitor_table['country_name'].unique().item(0)
 
             # 상관계수추출 scipy설치
-            x = list(merge_table['visit_count'])
-            y = list(merge_table['count_foreigner'])
+            x = list(merge_table['count_foreigner'])
+            y = list(merge_table['visit_count'])
             r = correlation_coefficient(x, y)
 
             data['r_' + country_name] = r
